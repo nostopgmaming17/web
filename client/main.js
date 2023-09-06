@@ -249,13 +249,13 @@
                         let id = d.getUint16(i*2+1);
                         let p = players.findIndex(v=>v.id==id)
                         if (p != -1) {
-                            delete players[p];
+                            players = players.filter(v=>v.id!=id);
                             LEFT.push(id);
                             setTimeout(()=>{
                                 if (LEFT.findIndex(v=>v==id) != -1) {
-                                    delete LEFT[LEFT.findIndex(v=>v==id)];
+                                    LEFT = LEFT.filter(v=>v.id!=id);
                                     if (players.findIndex(v=>v.id==id) != -1) {
-                                        delete players[players.findIndex(v=>v.id==id)];
+                                        players = players.filter(v=>v.id!=id);
                                     }
                                 }
                             },5000);
