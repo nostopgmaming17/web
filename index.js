@@ -89,7 +89,7 @@ wss.on('connection',ws=>{
     ws.on("close",()=>{
         remove.push(ws.ID);
         let idx = change.findIndex(v=>ws.ID);
-        if (idx != -1) delete change[idx];
+        if (idx != -1) change = change.filter(v=>v!=ws.ID);
     })
     change.push(ws.ID);
 });
