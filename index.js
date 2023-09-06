@@ -2,7 +2,6 @@ const PORT = 8000;
 const express = require("express");
 const app = express();
 const WebSocket = require("ws");
-const fetch = require("node-fetch");
 const fs = require("fs");
 const SocketServer = WebSocket.Server;
 /*
@@ -22,6 +21,9 @@ const server = app.listen(PORT);
 const wss = new SocketServer({server});
 
 const getTime = ()=>new Date().getTime();
+const dist = (a,b) => {
+    return Math.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2);
+}
 //let m = new Buffer();
 wss.on('connection',ws=>{
     console.log('Connection found.')
@@ -56,6 +58,7 @@ wss.on('connection',ws=>{
             } else if (m.readUint8(0) == 4) {
                 let TARGET = m.readUint16BE(1);
                 let p = Array.from(wss.clients).find(v=>v.ID == TARGET);
+                if (dist(ws,p) > 100) return;
                 p.hp = Math.max(0,p.hp-10);
                 if (p.hp == 0) {
                     let buf = Buffer.alloc(9);
@@ -86,7 +89,7 @@ wss.on('connection',ws=>{
     ws.on("close",()=>{
         remove.push(ws.ID);
         let idx = change.findIndex(v=>ws.ID);
-        if (idx != -1) change.pop(idx);
+        if (idx != -1) delete change[idx];
     })
     change.push(ws.ID);
 });
