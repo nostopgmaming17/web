@@ -118,15 +118,10 @@ setInterval(()=>{
         buf.writeUint8(3,0)
         for (let i = 0; i < remove.length; i++) {
             buf.writeUint16BE(remove[i],i*2+1);
-        }
+        };
         wss.clients.forEach(client=>{
             client.send(buf);
-        })
-        setTimeout(()=>{
-            wss.clients.forEach(client=>{
-                client.send(buf);
-            })
-        },1000);
+        });
     })();
     change = [];
     remove = [];
