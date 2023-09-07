@@ -1,4 +1,4 @@
-const PORT = 8000;
+const PORT = 80;
 const express = require("express");
 const app = express();
 const WebSocket = require("ws");
