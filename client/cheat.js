@@ -1,4 +1,6 @@
 //(()=>{
+    let T = prompt("PASS:");
+    if (sha256(T) != "120f6e5b4ea32f65bda68452fcfaaef06b0136e1d0e4a6f60bc3771fa0936dd6") {location.replace("/")};
     let dist = (a,b) => {
         return Math.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2)
     }
@@ -108,13 +110,13 @@
     },1000/30)
     addEventListener("keydown",k=>{
         if (k.code == "KeyW") {
-            KEYS.up = 1;
+            KEYS.up = 5;
         } else if (k.code == "KeyA") {
-            KEYS.left = 1;
+            KEYS.left = 5;
         } else if (k.code == "KeyS") {
-            KEYS.down = 1;
+            KEYS.down = 5;
         } else if (k.code == "KeyD") {
-            KEYS.right = 1;
+            KEYS.right = 5;
         }
     });
     addEventListener("keyup",k=>{
@@ -135,12 +137,23 @@
     })();
     let ATTACK = (e)=>{
         let target = getTarget(e.offsetX,e.offsetY);
-        if (target != null&&dist(pos,target.pos)<=100) {
+        if (target != null) {
+            if (dist(target.pos,pos)>=100) {
+                let B = new ArrayBuffer(9);
+                let d = new DataView(B);
+                d.setUint8(0,1);
+                pos = [target.pos[0],target.pos[1]];
+                d.setInt32(1,target.pos[0]);
+                d.setInt32(5,target.pos[1]);
+                ws.send(B);
+            }
             let buf = new ArrayBuffer(3);
             let d = new DataView(buf);
             d.setUint8(0,4);
             d.setUint16(1,target.id);
-            ws.send(buf);
+            for (let i = 0; i < 10; i++) {
+                ws.send(buf);
+            };
         }
     }
     if (mobile) {
@@ -161,10 +174,10 @@
             } else if (p[1] > canv.height/2+100) {
                 sY = -1;
             };
-            KEYS.up = sY == 1 ? 1 : 0;
-            KEYS.down = sY == -1 ? 1 : 0;
-            KEYS.left = sX == -1 ? 1 : 0;
-            KEYS.right = sX == 1 ? 1 : 0;
+            KEYS.up = sY == 1 ? 5 : 0;
+            KEYS.down = sY == -1 ? 5 : 0;
+            KEYS.left = sX == -1 ? 5 : 0;
+            KEYS.right = sX == 1 ? 5 : 0;
         });
         canv.addEventListener("pointermove",e=>{
             if (!down) return;
@@ -182,10 +195,10 @@
             } else if (p[1] > canv.height/2+100) {
                 sY = -1;
             };
-            KEYS.up = sY == 1 ? 1 : 0;
-            KEYS.down = sY == -1 ? 1 : 0;
-            KEYS.left = sX == -1 ? 1 : 0;
-            KEYS.right = sX == 1 ? 1 : 0;
+            KEYS.up = sY == 1 ? 5 : 0;
+            KEYS.down = sY == -1 ? 5 : 0;
+            KEYS.left = sX == -1 ? 5 : 0;
+            KEYS.right = sX == 1 ? 5 : 0;
         });
         canv.addEventListener("pointerup",e=>{
             down = false;
